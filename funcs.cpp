@@ -1,30 +1,3 @@
-/*
-#include <iostream>
-#include "funcs.h"
-#include "imageio.h"
-
-
-//Task A: invert
-void invert(std::string input){
-
-  int img[MAX_H][MAX_W];
-  int h, w;
-  readImage(input, img, h, w);
-  int inverted[MAX_H][MAX_W];
-
-  for(int row = 0; row < h; row++) {
-    for(int col = 0; col < w; col++) {
-      //inverted[row][col] = img[255 - row][255 - col];
-      inverted[row][col] = abs(255 - img[row][col]);
-    }
-  }
-  
-  // and save this new image to file "outImage.pgm"
-  writeImage("invertedImage.pgm",inverted, h, w);
-
-}
-*/
-
 #include <iostream>
 #include "funcs.h"
 #include "imageio.h"
@@ -40,8 +13,8 @@ void invert(std::string input){
 
   for(int row = 0; row < h; row++) {
     for(int col = 0; col < w; col++) {
-      //inverted[row][col] = img[255 - row][255 - col];
-      inverted[row][col] = abs(255 - img[row][col]);
+      inverted[row][col] = img[255 - row][255 - col];
+      //inverted[row][col] = abs(255 - img[row][col]);
     }
   }
   
@@ -52,20 +25,20 @@ void invert(std::string input){
 
 //Task B
 
-void invert-half(std::string input){
+void inverthalf(std::string input){
 
   int img[MAX_H][MAX_W];
   int h, w;
   readImage(input, img, h, w);
-  int inverted-half[MAX_H][MAX_W];
+  int inverted_half[MAX_H][MAX_W];
 
   for(int row = 0; row < h; row++) {
     for(int col = 0; col < w; col++) {
-      inverted-half[row][col] = img[row][col];
+      inverted_half[row][col] = img[row][col];
     }
   }
   
-  writeImage("halfInverted.pgm",inverted-half, h, w);
+  writeImage("halfInverted.pgm",inverted_half, h, w);
 }
 
 //Task C
@@ -83,7 +56,7 @@ void box(std::string input){
     }
   }
   
-  writeImage("box.pgm",inverted-half, h, w);
+  writeImage("box.pgm",arrbox, h, w);
 }
 
 
@@ -102,7 +75,7 @@ void frame(std::string input){
     }
   }
   
-  writeImage("halfInverted.pgm",inverted-half, h, w);
+  writeImage("frame.pgm",arrframe, h, w);
 }
 
 
@@ -117,11 +90,11 @@ void scale(std::string input){
 
   for(int row = 0; row < h; row++) {
     for(int col = 0; col < w; col++) {
-      arrscale[row][col] = img[row][col];
+      arrscale[row][col] = img[2 * row][2* col];
     }
   }
   
-  writeImage("halfInverted.pgm",inverted-half, h, w);
+  writeImage("scaled.pgm",arrscale, h, w);
 }
 
 //Task F
@@ -139,5 +112,5 @@ void pixelate(std::string input){
     }
   }
   
-  writeImage("halfInverted.pgm",inverted-half, h, w);
+  writeImage("pixelate.pgm",pixel, h, w);
 }
