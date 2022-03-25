@@ -9,6 +9,6 @@ void whiteBox(std::string imagefile, std::string outfile);
 
 void addFrame(std::string imagefile, std::string outfile);
 
-void scaleBy200(std::string imagefile, std::string outfile);
+//void scaleBy200(std::string imagefile, std::string outfile);
 
 void pixelate(std::string imagefile, std::string outfile);

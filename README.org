@@ -1,12 +1,12 @@
 * Spring 2022 - Lab 08
 
-* Last name:
+* Last name: Clarke
 
-* First name:
+* First name: Ian
 
-* GitHub username:
+* GitHub username: ianclarke03
 
-* Notes:
+* Notes: couldn't complete Task E: Scale 200%
 
 
   

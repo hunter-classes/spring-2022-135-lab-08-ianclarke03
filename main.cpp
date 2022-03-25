@@ -26,8 +26,8 @@ int main(){
     addFrame(imageFile, taskD_outfile);
 
     //task E scale by 200%
-    std::string taskE_outfile = "taskE.pgm";
-    scaleBy200(imageFile, taskE_outfile);
+    //std::string taskE_outfile = "taskE.pgm";
+    //scaleBy200(imageFile, taskE_outfile);
 
     //task F pixelate the image file
     std::string taskF_outfile = "taskF.pgm";
