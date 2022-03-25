@@ -1,199 +1,206 @@
 #include <iostream>
-#include "funcs.h"
+#include <cassert>
+#include <cstdlib>
+#include <fstream>
+#include <string>
 #include "imageio.h"
+#include "funcs.h"
 
-//Task A
+//task A
+//all colors are inverted (white to black OR black to white)
+void invertColors(std::string imagefile, std::string outfile){
+    // takes in a array called image, height, and width which are all empty and will be filled in with the image data
+    int image[MAX_H][MAX_W];
+    int height, width;
 
-void invert(std::string input){
+    readImage(imagefile, image, height, width); // reads the provided image and reports back the dimensions
 
-  int img[MAX_H][MAX_W];
-  int h, w;
-  readImage(input, img, h, w);
-  int inverted[MAX_H][MAX_W];
+    int out[MAX_H][MAX_W]; // modify the contents in a new array 
 
-  for(int row = 0; row < h; row++) {
-    for(int col = 0; col < w; col++) {
-      inverted[row][col] = img[255 - row][255 - col];
-      //inverted[row][col] = abs(255 - img[row][col]);
+    for (int row = 0; row < height; row++){
+        for (int col = 0; col < width; col++){
+
+            // (note: black is 0 & white is 255)
+            // examples: 2 --> 253 3 --> 252 to do this: subtract the pixel by 255
+            out[row][col] = 255 - (image[row][col]); // image[row][col] is the individual pixel brightness on a scale from 0 to 255 
+            
+        }
     }
-  }
-  
-  // and save this new image to file "outImage.pgm"
-  writeImage("invertedImage.pgm",inverted, h, w);
 
+    writeImage(outfile, out, height, width);
 }
 
-/*Task B
+//task B
+//inverts the colors ONLY in the right half of the picture
 
-void inverthalf(std::string input){
+void invertColors2(std::string imagefile, std::string outfile){
 
-  int img[MAX_H][MAX_W];
-  int h, w;
-  readImage(input, img, h, w);
-  int inverted_half[MAX_H][MAX_W];
+    int image[MAX_H][MAX_W];//2d array
+    int height, width;
 
-  for(int row = 0; row < h; row++) {
-    for(int col = 0; col < w; col++) {
-      inverted_half[row][col] = img[row][col];
+    readImage(imagefile, image, height, width);
+
+    int out[MAX_H][MAX_W];
+    int halfMark = width/2;
+    
+    for (int row = 0; row < height; row++){
+        for (int col = 0; col < width; col++){
+            
+            if (col >= halfMark){ //column number has to be greater than or equal to the half point mark to be on the right
+                out[row][col] = 255 - (image[row][col]);
+            }
+            else { //if not, just keep it the same and copy it to array out
+                out[row][col] = image[row][col];
+            }
+        }
     }
-  }
-  
-  writeImage("halfInverted.pgm",inverted_half, h, w);
-}
 
-//Task C
-
-void box(std::string input){
-
-  int img[MAX_H][MAX_W];
-  int h, w;
-  readImage(input, img, h, w);
-  int arrbox[MAX_H][MAX_W];
-
-  for(int row = 0; row < h; row++) {
-    for(int col = 0; col < w; col++) {
-      arrbox[row][col] = img[row][col];
-    }
-  }
-  
-  writeImage("box.pgm",arrbox, h, w);
+    writeImage(outfile, out, height, width);
 }
 
 
-//Task D
+//task C
+//add a white box exactly in the middle of the picture 
 
-void frame(std::string input){
+void whiteBox(std::string imagefile, std::string outfile){
 
-  int img[MAX_H][MAX_W];
-  int h, w;
-  readImage(input, img, h, w);
-  int arrframe[MAX_H][MAX_W];
+    int image[MAX_H][MAX_W];
+    int height, width;
 
-  for(int row = 0; row < h; row++) {
-    for(int col = 0; col < w; col++) {
-      arrframe[row][col] = img[row][col];
+    readImage(imagefile, image, height, width);
+
+    int out[MAX_H][MAX_W];
+    int colMark1 = width/4; // quarter of the width (left side of the box)
+    int colMark2 = 3 * colMark1; // 3/4 of the width (right side of the box)
+
+    int rowMark1 = height/4; // quarter of the height (top of the box)
+    int rowMark2 = 3 * rowMark1; // 3/4 of the height (bottom of the box)
+
+    for (int row = 0; row < height; row++){
+        for (int col = 0; col < width; col++){
+
+            // greater than or equal to mark 1 and below mark 2 which is going from 1/4 to 3/4 == 1/2
+            if ( (col >= colMark1 && col <= colMark2) && (row >= rowMark1 && row <= rowMark2) ){
+                int diff = 255 - image[row][col]; // to be white, the pixel brightness needs to be 255, so we calculate the difference then add that back
+                out[row][col] = diff + (image[row][col]);
+            }
+            else {
+                out[row][col] = image[row][col];
+            }
+        }
     }
-  }
-  
-  writeImage("frame.pgm",arrframe, h, w);
+
+    writeImage(outfile, out, height, width);
+
 }
 
 
-//Task E
+//task D
+//add a frame (one pixel thick) in the middle of the picture
 
-void scale(std::string input){
+void addFrame(std::string imagefile, std::string outfile){
+    
+    int image[MAX_H][MAX_W];
+    int height, width;
 
-  int img[MAX_H][MAX_W];
-  int h, w;
-  readImage(input, img, h, w);
-  int arrscale[MAX_H][MAX_W];
+    readImage(imagefile, image, height, width);
 
-  for(int row = 0; row < h; row++) {
-    for(int col = 0; col < w; col++) {
-      arrscale[row][col] = img[2 * row][2* col];
+    int out[MAX_H][MAX_W];
+    int colMark1 = width/4; // quarter of the width (left side of the box)
+    int colMark2 = 3 * colMark1; // 3/4 of the width (right side of the box)
+
+    int rowMark1 = height/4; // quarter of the height (top of the box)
+    int rowMark2 = 3 * rowMark1; // 3/4 of the height (bottom of the box)
+
+    for (int row = 0; row < height; row++){
+        for (int col = 0; col < width; col++){
+
+            // top horizontal line must be on rowMark1 and can span through the columns
+            // left vertical line must be on colMark1 and can span through all the rows
+            // (same applies for right line and bottom line)
+
+            // the column must be in between the column range and must belong on either marked row
+            if ( (col >= colMark1 && col <= colMark2) && (row == rowMark1 || row == rowMark2) ){
+                int diff = 255 - image[row][col];
+                out[row][col] = diff + image[row][col];
+            }
+            else if ( (row >= rowMark1 && row <= rowMark2) && (col == colMark1 || col == colMark2) ){
+                int diff = 255 - image[row][col];
+                out[row][col] = diff + image[row][col];
+            }
+            else {
+                out[row][col] = image[row][col];
+            }
+        }
     }
-  }
-  
-  writeImage("scaled.pgm",arrscale, h, w);
+
+    writeImage(outfile, out, height, width);
+
 }
 
-//Task F
+//task E
+//scale the original image by 200% (each pixel is 2x2)
+// use 4 for loops --> for row, for 2(increase by the factor of 2 to add it twice), for col, for 2
 
-void pixelate(std::string input){
+void scaleBy200(std::string imagefile, std::string outfile){
 
-  int img[MAX_H][MAX_W];
-  int h, w;
-  readImage(input, img, h, w);
-  int pixel[MAX_H][MAX_W];
+    int image[MAX_H][MAX_W];
+    int height, width;
 
-  for(int row = 0; row < h; row++) {
-    for(int col = 0; col < w; col++) {
-      pixel[row][col] = img[row][col];
+    readImage(imagefile, image, height, width);
+
+    int out[MAX_H][MAX_W];
+    //increase the size of the image by a factor of 2:
+    int newHeight = (height * 2);
+    int newWidth = (width * 2);
+
+    for (int row = 0; row < newHeight-10; row++){
+        
+        for (int col = 0; col < newWidth-10; col++){
+            int r = row/2;
+            int c = col/2;
+
+            // to get a 2x2: --> 11 --> 11 11 
+            //                          11 11
+            // top left--> copy the pixel normally into the array out
+            // top right --> increase the width by 1
+            // bottom left --> increase the height by 1
+            // bottom right --> increase the width and height both by 1
+            out[row][col] = image[r][c]; // image[row][col] doesn't fill the entire space and when opened, we can see black unused space 
+            out[row][col+1] = image[r][c];
+            out[row+1][col] = image[r][c];
+            out[row+1][col+1] = image[r][c];
+
+        }
+        
     }
-  }
-  
-  writeImage("pixelate.pgm",pixel, h, w);
-}
-*/
 
-
-int invertHalf(std::string filename)
-{
-  std::string input = filename;
-  int img[MAX_H][MAX_W];
-  int h, w;
-  readImage(input, img, h, w); // read it from the file "inImage.pgm"
-  // h and w were passed by reference and
-  // now contain the dimensions of the picture
-  // and the 2-dimesional array img contains the image data
-  // Now we can manipulate the image the way we like
-  // for example we copy its contents into a new array
-  int out[MAX_H][MAX_W];
-  for(int row = 0; row < h; row++) {
-    for(int col = 0; col < w; col++) {
-      if (col >= w/2) {
-        out[row][col] = 255-img[row][col];
-      }
-      else {
-        out[row][col] = img[row][col];
-      }
-    }
-  }
-  // and save this new image to file "outImage.pgm"
-  writeImage("halfInvertedImage.pgm",out, h, w);
-  return 0;
+    writeImage(outfile, out, newHeight, newWidth);
 }
 
-int box(std::string filename)
-{
-  std::string input = filename;
-  int img[MAX_H][MAX_W];
-  int h, w;
-  readImage(input, img, h, w); // read it from the file "inImage.pgm"
-  // h and w were passed by reference and
-  // now contain the dimensions of the picture
-  // and the 2-dimesional array img contains the image data
-  // Now we can manipulate the image the way we like
-  // for example we copy its contents into a new array
-  int out[MAX_H][MAX_W];
-  for(int row = 0; row < h; row++) {
-    for(int col = 0; col < w; col++) {
-      if (row < h*3/4 && row > h/4 && col > w/4 && col < w*3/4) {
-        out[row][col] = 255;
-      }
-      else {
-        out[row][col] = img[row][col];
-      }
-    }
-  }
-  // and save this new image to file "outImage.pgm"
-  writeImage("boxImage.pgm",out, h, w);
-  return 0;
-}
+//task F
+//pixelate the imagefile
 
-int frame(std::string filename)
-{
-  std::string input = filename;
-  int img[MAX_H][MAX_W];
-  int h, w;
-  readImage(input, img, h, w); // read it from the file "inImage.pgm"
-  // h and w were passed by reference and
-  // now contain the dimensions of the picture
-  // and the 2-dimesional array img contains the image data
-  // Now we can manipulate the image the way we like
-  // for example we copy its contents into a new array
-  int out[MAX_H][MAX_W];
-  for(int row = 0; row < h; row++) {
-    for(int col = 0; col < w; col++) {
-      if ((row <= h*3/4 && row >= h/4 && col >= w/4 && col <= w*3/4) && (row == h*3/4 || row == h/4 || col == w/4 || col == w*3/4)) {
-        out[row][col] = 255;
-      }
-      else {
-        out[row][col] = img[row][col];
-      }
+void pixelate(std::string imagefile, std::string outfile){
+
+    int image[MAX_H][MAX_W];
+    int height, width;
+
+    readImage(imagefile, image, height, width);
+
+    int out[MAX_H][MAX_W];
+
+    for (int row = 0; row < height; row+=2){ //going by 2's because 2x2 takes into account both rows/both columns
+        for (int col = 0; col < width; col+=2){
+            //take the average in a 2x2 window (assuming height and width are even)
+            int average = (image[row][col] + image[row][col + 1] + image[row+1][col] + image[row+1][col+1])/4;
+            //assign that average to each of the pixels in the 2x2 window
+            out[row][col] = average;
+            out[row][col+1] = average;
+            out[row+1][col] = average;
+            out[row+1][col+1] = average;
+        }
     }
-  }
-  // and save this new image to file "outImage.pgm"
-  writeImage("frameImage.pgm",out, h, w);
-  return 0;
+
+    writeImage(outfile, out, height, width);
 }

@@ -17,4 +17,4 @@ imageio.o: imageio.cpp imageio.h
 	g++ -c imageio.cpp
 
 clean:
-	rm -f main sample.o imageio.o main.o funcs.o
+	rm -f main sample.o imageio.o main.o funcs.o taskA.pgm taskB.pgm taskC.pgm taskD.pgm taskE.pgm taskF.pgm

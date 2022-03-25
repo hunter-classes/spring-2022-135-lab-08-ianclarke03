@@ -1,8 +1,14 @@
 #pragma once
+#include <string>
 
-void invert(std::string input);
-void inverthalf(std::string input);
-void box(std::string input);
-void frame(std::string input);
-void scale(std::string input);
-void pixelate(std::string input);
+void invertColors(std::string imagefile, std::string outfile);
+
+void invertColors2(std::string imagefile, std::string outfile);
+
+void whiteBox(std::string imagefile, std::string outfile);
+
+void addFrame(std::string imagefile, std::string outfile);
+
+void scaleBy200(std::string imagefile, std::string outfile);
+
+void pixelate(std::string imagefile, std::string outfile);
